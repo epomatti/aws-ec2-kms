@@ -1,10 +1,10 @@
 resource "aws_iam_instance_profile" "default" {
-  name = "EC2RoleA"
+  name = "EC2RoleB"
   role = aws_iam_role.default.id
 }
 
 resource "aws_iam_role" "default" {
-  name = "EC2RoleA"
+  name = "EC2RoleB"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
