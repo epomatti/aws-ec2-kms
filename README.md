@@ -47,7 +47,7 @@ The KMS Key has the following key policy:
 }
 ```
 
-EC2RoleA has no policies, but EC2RoleB has the following policy:
+`EC2RoleA` has no policies, but `EC2RoleB` has the inline policy:
 
 ```json
 {
