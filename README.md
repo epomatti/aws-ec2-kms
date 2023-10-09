@@ -9,9 +9,67 @@ terraform init
 terraform apply -auto-approve
 ```
 
-Copy the `kms_key_id` output and connect to both instances.
+The KMS Key has the following key policy:
 
-Teste the commands on both EC2 instances:
+```json
+{
+    "Version": "2012-10-17",
+    "Id": "EC2Project",
+    "Statement": [
+        {
+            "Sid": "Enable IAM User Permissions",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::000000000000:root"
+            },
+            "Action": "kms:*",
+            "Resource": "*"
+        },
+        {
+            "Sid": "Allow use of the key",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::000000000000:role/EC2RoleA",
+                    "arn:aws:iam::000000000000:role/EC2RoleB"
+                ]
+            },
+            "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt",
+                "kms:GenerateDataKey",
+                "kms:DescribeKey"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+EC2RoleA has no policies, but EC2RoleB has the following policy:
+
+```json
+{
+  "Statement": [
+    {
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:DescribeKey"
+      ],
+      "Effect": "Deny",
+      "Resource": "*",
+      "Sid": "VisualEditor0"
+    }
+  ],
+  "Version": "2012-10-17"
+}
+```
+
+Now for the testing, copy the `kms_key_id` output and connect to both instances.
+
+Run the commands on both EC2 instances:
 
 ```sh
 aws kms describe-key --key-id <id>
